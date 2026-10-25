@@ -1,107 +1,62 @@
-[![PyPI version](https://img.shields.io/pypi/v/ansible-core.svg)](https://pypi.org/project/ansible-core)
-[![Docs badge](https://img.shields.io/badge/docs-latest-brightgreen.svg)](https://docs.ansible.com/ansible/latest/)
-[![Chat badge](https://img.shields.io/badge/chat-Matrix-brightgreen.svg)](https://docs.ansible.com/ansible/devel/community/communication.html#real-time-chat)
-[![Ansible forum](https://img.shields.io/badge/forum-Ansible-orange.svg)](https://docs.ansible.com/ansible/devel/community/communication.html#forum)
-[![Build Status](https://dev.azure.com/ansible/ansible/_apis/build/status/CI?branchName=devel)](https://dev.azure.com/ansible/ansible/_build/latest?definitionId=20&branchName=devel)
-[![Ansible Code of Conduct](https://img.shields.io/badge/code%20of%20conduct-Ansible-silver.svg)](https://docs.ansible.com/ansible/devel/community/code_of_conduct.html)
-[![Repository License](https://img.shields.io/badge/license-GPL%20v3.0-brightgreen.svg)][copying]
-[![Ansible CII Best Practices certification](https://bestpractices.coreinfrastructure.org/projects/2372/badge)](https://bestpractices.coreinfrastructure.org/projects/2372)
+***Подготовка к выполнению:***
 
-# Ansible
+- Склонировал проект: `git clone https://github.com/ansible/ansible.git`
 
-Ansible is a radically simple IT automation system. It handles
-configuration management, application deployment, cloud provisioning,
-ad-hoc task execution, network automation, and multi-node orchestration. Ansible makes complex
-changes like zero-downtime rolling updates with load balancers easy. More information on the Ansible [website](https://ansible.com/).
+- Подключил виртуальное окружение:
 
-## Design Principles
+![Снимок экрана 2026-10-12 в 12.38.10.png](screenshots/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0%202026-10-12%20%D0%B2%2012.38.10.png)
 
-* Have an extremely simple setup process with a minimal learning curve.
-* Manage machines quickly and in parallel.
-* Avoid custom-agents and additional open ports, be agentless by
-  leveraging the existing SSH daemon.
-* Describe infrastructure in a language that is both machine and human
-  friendly.
-* Focus on security and easy auditability/review/rewriting of content.
-* Manage new remote machines instantly, without bootstrapping any
-  software.
-* Allow module development in any dynamic language, not just Python.
-* Be usable as non-root.
-* Be the easiest IT automation system to use, ever.
+***Выполнение ТЗ***:
 
-## Use Ansible
+1) Подготовил тестовый модуль `my_own_module.py`, прописал в нем логику для создания файла path и заполнения его данными 
+content. Также реализовал в нем идемпотентность(т.е. проверку наличия такого файла и сравнение текста из входных данных и тех,
+что гипотетически могут лежать в имеющемся на хосте файле)
 
-You can install a released version of Ansible with `pip` or a package manager. See our
-[installation guide](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html) for details on installing Ansible
-on a variety of platforms.
+- Результат первичного локального запуска:
 
-Power users and developers can run the `devel` branch, which has the latest
-features and fixes, directly. Although it is reasonably stable, you are more likely to encounter
-breaking changes when running the `devel` branch. We recommend getting involved
-in the Ansible community if you want to run the `devel` branch.
+![Снимок экрана 2026-10-12 в 13.34.25.png](screenshots/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0%202026-10-12%20%D0%B2%2013.34.25.png)
 
-## Communication
+![Снимок экрана 2026-10-12 в 13.36.57.png](screenshots/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0%202026-10-12%20%D0%B2%2013.36.57.png)
 
-Join the Ansible forum to ask questions, get help, and interact with the
-community.
+- Локальная проверка идемпотентоности модуля:
 
-* [Get Help](https://forum.ansible.com/c/help/6): Find help or share your Ansible knowledge to help others.
-  Use tags to filter and subscribe to posts, such as the following:
-  * Posts tagged with [ansible](https://forum.ansible.com/tag/ansible)
-  * Posts tagged with [ansible-core](https://forum.ansible.com/tag/ansible-core)
-  * Posts tagged with [playbook](https://forum.ansible.com/tag/playbook)
-* [Social Spaces](https://forum.ansible.com/c/chat/4): Meet and interact with fellow enthusiasts.
-* [News & Announcements](https://forum.ansible.com/c/news/5): Track project-wide announcements including social events.
-* [Bullhorn newsletter](https://docs.ansible.com/ansible/devel/community/communication.html#the-bullhorn): Get release announcements and important changes.
+![Снимок экрана 2026-10-12 в 13.43.06.png](screenshots/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0%202026-10-12%20%D0%B2%2013.43.06.png)
 
-For more ways to get in touch, see [Communicating with the Ansible community](https://docs.ansible.com/ansible/devel/community/communication.html).
+Видим `changed=false` => файл заново не пересоздался и не перезаписался.
 
-## Contribute to Ansible
+2) Плейбук.
 
-* Check out the [Contributor's Guide](https://github.com/ansible/ansible/blob/devel/.github/CONTRIBUTING.md).
-* Read [Community Information](https://docs.ansible.com/ansible/devel/community) for all
-  kinds of ways to contribute to and interact with the project,
-  including how to submit bug reports and code to Ansible.
-* Submit a proposed code update through a pull request to the `devel` branch.
-* Talk to us before making larger changes
-  to avoid duplicate efforts. This not only helps everyone
-  know what is going on, but it also helps save time and effort if we decide
-  some changes are needed.
+- Подготовил плейбук(пока для локального использования):
 
-## Coding Guidelines
+![Снимок экрана 2026-10-12 в 14.04.51.png](screenshots/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0%202026-10-12%20%D0%B2%2014.04.51.png)
 
-Development context for ansible-core can be found in the [context](context/) directory.
+- Запуск плейбука и проверка его идемпотентности:
 
-We also document our Coding Guidelines in the [Developer Guide](https://docs.ansible.com/ansible/devel/dev_guide/). We particularly suggest you review:
+Первичный запуск:
 
-* [Contributing your module to Ansible](https://docs.ansible.com/ansible/devel/dev_guide/developing_modules_checklist.html)
-* [Conventions, tips, and pitfalls](https://docs.ansible.com/ansible/devel/dev_guide/developing_modules_best_practices.html)
+![Снимок экрана 2026-10-12 в 14.03.15.png](screenshots/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0%202026-10-12%20%D0%B2%2014.03.15.png)
 
-## Branch Info
+Результат выполнения:
 
-* The `devel` branch corresponds to the release actively under development.
-* The `stable-2.X` branches correspond to stable releases.
-* Create a branch based on `devel` and set up a [dev environment](https://docs.ansible.com/ansible/devel/dev_guide/developing_modules_general.html#common-environment-setup) if you want to open a PR.
-* See the [Ansible release and maintenance](https://docs.ansible.com/ansible/devel/reference_appendices/release_and_maintenance.html) page for information about active branches.
+![Снимок экрана 2026-10-12 в 14.06.38.png](screenshots/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0%202026-10-12%20%D0%B2%2014.06.38.png)
 
-## Roadmap
+Идемпотентность:
 
-Based on team and community feedback, an initial roadmap will be published for a major or minor version (ex: 2.7, 2.8).
-The [Ansible Roadmap page](https://docs.ansible.com/ansible/devel/roadmap/) details what is planned and how to influence the roadmap.
+![Снимок экрана 2026-10-12 в 14.07.31.png](screenshots/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0%202026-10-12%20%D0%B2%2014.07.31.png)
 
-## Authors
+Видим `changed=0` => идемпотентность работает стабильно.
 
-Ansible was created by [Michael DeHaan](https://github.com/mpdehaan)
-and has contributions from over 5000 users (and growing). Thanks everyone!
+3) Инициализация коллекции и перенос туда модуля и плейбука в виде роли.
 
-This project is substantially coded by humans.
+- В корне проекта ввел `ansible-galaxy collection init my_own_namespace.yandex_cloud_elk`
 
-[Ansible](https://www.ansible.com) is sponsored by [Red Hat, Inc.](https://www.redhat.com)
+- Положил наш модуль в `my_own_namespace.yandex_cloud_elk/plugins/modules`.
 
-## License
+- Перенес плейбук для одной задачи в виде роли в нашу коллекцию, входящие параметры поставил по умолчанию:
 
-GNU General Public License v3.0 or later
+![Снимок экрана 2026-10-12 в 14.50.57.png](screenshots/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0%202026-10-12%20%D0%B2%2014.50.57.png)
 
-See [COPYING] to see the full text.
+4) Создал плейбук для использования этой роли:
 
-[copying]: https://github.com/ansible/ansible/blob/devel/COPYING
+![Снимок экрана 2026-10-12 в 15.09.39.png](screenshots/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0%202026-10-12%20%D0%B2%2015.09.39.png)
+
